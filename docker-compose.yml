@@ -207,38 +207,72 @@ services:
       echo -e 'Successfully created the following topics:'
       kafka-topics --bootstrap-server broker:29092 --list
       "
-  storage-flattened:
-    image: postgres
-    restart: always
-    volumes:
-      - ./storage_flattened/init.sql:/docker-entrypoint-initdb.d/init.sql
+#  storage-flattened:
+#    image: postgres
+#    restart: always
+#    volumes:
+#      - ./storage_flattened/init.sql:/docker-entrypoint-initdb.d/init.sql
+#    environment:
+#      POSTGRES_USER: "flattenedocpp"
+#      POSTGRES_PASSWORD: "example"
+#  consumer-flattener:
+#    build: consumer_flattener/.
+#    container_name: consumer-flattener
+#    restart: always
+#    environment:
+#      DBNAME: "flattenedocpp"
+#      DBUSER: "consumerflattener"
+#      DBPASS: "example"
+#      DBHOST: "storage-flattened"
+#      BOOTSTRAP_SERVERS: "broker:29092"
+#      DELAY_START_SECONDS: "180"
+#      TOPICS_TO_CONSUME: "StartTransactionRequest,StartTransactionResponse,StopTransactionRequest,StopTransactionResponse,MeterValuesRequest,MeterValuesResponse"
+  storage-reshaped:
+    image: amazon/dynamodb-local
+    container_name: storage-reshaped
+    ports:
+      - "9000:8000"
+  storage-reshaped-seeder:
+    build: storage_reshaped_seeder/.
+    container_name: storage-reshaped-seeder
     environment:
-      POSTGRES_USER: "flattenedocpp"
-      POSTGRES_PASSWORD: "example"
-  consumer-flattener:
-    build: consumer_flattener/.
-    container_name: consumer-flattener
+      DELAY_START_SECONDS: "20"
+      HOST: "storage-reshaped"
+      PORT: "9000"
+  consumer-reshaper:
+    build: consumer_reshaper/.
+    container_name: consumer-reshaper
     restart: always
     environment:
-      DBNAME: "flattenedocpp"
-      DBUSER: "consumerflattener"
-      DBPASS: "example"
-      DBHOST: "storage-flattened"
       BOOTSTRAP_SERVERS: "broker:29092"
       DELAY_START_SECONDS: "180"
-      TOPICS_TO_CONSUME: "StartTransactionRequest,StartTransactionResponse,StopTransactionRequest,StopTransactionResponse,MeterValuesRequest,MeterValuesResponse"
-  consumer-stoptransaction:
-    build: consumer_stop_transaction_request/.
-    container_name: consumer-stop-transaction-request
+      TOPICS_TO_CONSUME: "StartTransactionRequest,StartTransactionResponse,MeterValuesRequest"
+      HOST: "storage-reshaped"
+      PORT: "9000"
+#  consumer-stoptransaction:
+#    build: consumer_stop_transaction_request/.
+#    container_name: consumer-stop-transaction-request
+#    restart: always
+#    environment:
+#      DBNAME: "flattenedocpp"
+#      DBUSER: "consumerstoptransaction"
+#      DBPASS: "example"
+#      DBHOST: "storage-flattened"
+#      BOOTSTRAP_SERVERS: "broker:29092"
+#      DELAY_START_SECONDS: "180"
+#      TOPICS_TO_CONSUME: "StopTransactionRequest"
+  consumer-stoptransaction-dynamo:
+    build: consumer_stop_transaction_request_dynamo/.
+    container_name: consumer-stop-transaction-request-dynamo
     restart: always
     environment:
-      DBNAME: "flattenedocpp"
-      DBUSER: "consumerstoptransaction"
-      DBPASS: "example"
-      DBHOST: "storage-flattened"
       BOOTSTRAP_SERVERS: "broker:29092"
       DELAY_START_SECONDS: "180"
       TOPICS_TO_CONSUME: "StopTransactionRequest"
+      READER_HOST: "storage-reshaped"
+      READER_PORT: "9000"
+      WRITER_HOST: "ocpi-storage"
+      WRITER_PORT: "8000"
   ocpi-storage:
     image: amazon/dynamodb-local
     container_name: ocpi-storage

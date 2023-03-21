@@ -1,0 +1,4 @@
+pandas
+boto3
+confluent-kafka
+git+https://github.com/kelseymok/ocpi#egg=ocpi
