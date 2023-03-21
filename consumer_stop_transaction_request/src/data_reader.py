@@ -1,4 +1,5 @@
 import pandas as pd
+from pandas import DataFrame
 from sqlalchemy import text
 
 
@@ -10,15 +11,12 @@ class DataReader:
         command = f"select * from starttransactionrequest where messageid = (select messageid from starttransactionresponse where bodytransactionid = {transaction_id} limit 1)"
         df = self._execute(command)
         records = df.to_dict(orient="records")
-        print(records)
         return records
 
-    def get_charging_sessions(self, transaction_id):
+    def get_charging_sessions(self, transaction_id) -> DataFrame:
         command = f"select * from metervaluesrequest where transactionId = {transaction_id}"
         df = self._execute(command)
-        records = df.to_dict(orient="records")
-        print(records)
-        return records
+        return df
 
     def _execute(self, command: str):
         with self.engine.connect() as conn:
