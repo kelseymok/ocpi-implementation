@@ -1,0 +1,6 @@
+pandas
+boto3
+confluent-kafka
+psycopg2
+git+https://github.com/kelseymok/ocpi#egg=ocpi
+sqlalchemy

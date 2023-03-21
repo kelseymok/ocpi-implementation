@@ -1,0 +1,5 @@
+pandas
+boto3
+confluent-kafka
+psycopg2
+sqlalchemy

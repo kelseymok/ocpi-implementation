@@ -1,0 +1,8 @@
+boto3
+fastapi
+uvicorn
+pandas
+confluent-kafka
+psycopg2
+git+https://github.com/kelseymok/ocpi#egg=ocpi
+sqlalchemy
