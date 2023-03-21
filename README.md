@@ -1,7 +1,7 @@
 # OCPI Implementation POC
 This is a quick and dirty (emphasis) POC to explore some of the components of an OCPI implementation (CDR)
 
-Components
+## Components
 * OCPP Event Producer of generated data for ChargePoints over 6 months
 * Kafka Stack to receive OCPP Events
 * Consumer Flattener - flattens OCPP Events
