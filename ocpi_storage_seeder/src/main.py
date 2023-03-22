@@ -195,6 +195,8 @@ create_table("Locations")
 create_table("CDRs")
 create_tariff()
 create_location()
+response = dynamodb.list_tables()
+print(response)
 # results = scan("Locations")
 # print(results)
 # body_binary = results["Items"][0]["body"]["B"]

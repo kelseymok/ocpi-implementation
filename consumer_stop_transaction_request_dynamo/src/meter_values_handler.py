@@ -7,7 +7,7 @@ from dateutil import parser
 
 class MeterValuesHandler:
 
-    def handle(self, data) -> List[DataFrame]:
+    def handle(self, data: List[Dict]) -> List[DataFrame]:
         dfs = self._split_meter_values_to_charging_sessions(self._reshape(data))
         return dfs
 

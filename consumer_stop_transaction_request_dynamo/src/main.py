@@ -28,14 +28,14 @@ consumer = Consumer(conf)
 
 running = True
 reader_host = os.environ.get("READER_HOST", "localhost")
-reader_port = os.environ.get("READER_HOST", "9000")
+reader_port = os.environ.get("READER_PORT", "9000")
 reader_client = boto3.client('dynamodb', region_name='local', endpoint_url=f"http://{reader_host}:{reader_port}", aws_access_key_id="X",
     aws_secret_access_key="X")
 
 data_reader = DataReader(reader_client)
 
 writer_host = os.environ.get("WRITER_HOST", "localhost")
-writer_port = os.environ.get("WRITER_HOST", "8000")
+writer_port = os.environ.get("WRITER_PORT", "8000")
 writer_client = boto3.client('dynamodb', region_name='local', endpoint_url=f"http://{writer_host}:{writer_port}", aws_access_key_id="X",
     aws_secret_access_key="X")
 

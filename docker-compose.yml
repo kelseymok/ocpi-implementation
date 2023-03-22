@@ -230,8 +230,9 @@ services:
   storage-reshaped:
     image: amazon/dynamodb-local
     container_name: storage-reshaped
+    command: "-jar DynamoDBLocal.jar -port 9000"
     ports:
-      - "9000:8000"
+      - "9000:9000"
   storage-reshaped-seeder:
     build: storage_reshaped_seeder/.
     container_name: storage-reshaped-seeder

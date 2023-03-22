@@ -45,10 +45,6 @@ def create_start_transaction_response():
     dynamodb.create_table(
         AttributeDefinitions=[
             {
-                'AttributeName': 'message_id',
-                'AttributeType': 'S'
-            },
-            {
                 'AttributeName': 'transaction_id',
                 'AttributeType': 'N'
             }
@@ -56,12 +52,8 @@ def create_start_transaction_response():
         TableName="StartTransactionResponse",
         KeySchema=[
             {
-                'AttributeName': 'message_id',
-                'KeyType': 'HASH'
-            },
-            {
                 'AttributeName': 'transaction_id',
-                'KeyType': 'RANGE'
+                'KeyType': 'HASH'
             }
         ],
         BillingMode='PAY_PER_REQUEST'
@@ -82,13 +74,13 @@ def create_meter_values_request():
         TableName="MeterValuesRequest",
         KeySchema=[
             {
-                'AttributeName': 'id',
+                'AttributeName': 'transaction_id',
                 'KeyType': 'HASH'
             },
             {
-                'AttributeName': 'transaction_id',
+                'AttributeName': 'id',
                 'KeyType': 'RANGE'
-            }
+            },
         ],
         BillingMode='PAY_PER_REQUEST'
     )
@@ -97,3 +89,9 @@ def create_meter_values_request():
 create_meter_values_request()
 create_start_transaction_response()
 create_start_transaction_request()
+response = dynamodb.list_tables()
+expected_tables = ["MeterValuesRequest", "StartTransactionResponse", "StartTransactionRequest"]
+if set(response['TableNames']) == set(expected_tables):
+    print("All tables present")
+else:
+    raise Exception(f"Expected tables not present. Tables present: {response['TableNames']}")

@@ -3,6 +3,8 @@ from typing import Dict, List
 
 import json
 import uuid
+
+import pandas as pd
 from dateutil import parser
 from pandas import DataFrame
 from pytz import UTC
@@ -86,8 +88,8 @@ class Wrangler:
         )
 
     def _get_charging_time_seconds(self, df: DataFrame):
-        sorted_df = df.sort_values(by=['eventtimestamp_epoch'], ignore_index=True)
-        tmp_df = sorted_df["eventtimestamp_epoch"].iloc[[0, -1]].tolist()
+        sorted_df = df.sort_values(by=['timestamp_epoch'], ignore_index=True)
+        tmp_df = sorted_df["timestamp_epoch"].iloc[[0, -1]].tolist()
         charging_time_seconds = tmp_df[1] - tmp_df[0]
 
         return charging_time_seconds
@@ -102,13 +104,12 @@ class Wrangler:
 
     def process(self, data: Dict):
         print(data)
-        start_transaction_request_record = self.data_reader.get_start_transaction_request(transaction_id=data["body"]["transaction_id"])["body"]
+        start_transaction_request_record = self.data_reader.get_start_transaction_request(transaction_id=data["body"]["transaction_id"])
         print(f"start_transaction_request_record: {start_transaction_request_record}")
 
         meter_values = self.data_reader.get_charging_sessions(transaction_id=data["body"]["transaction_id"])
         print(f"meter_values: {meter_values}")
         charging_sessions = self.meter_values_handler.handle(meter_values)
-
         now = datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ')
 
         charging_periods = [self._charging_session_to_charging_period(df) for df in charging_sessions]
@@ -120,7 +121,7 @@ class Wrangler:
             start_date_time=start_transaction_request_record["body"]["timestamp"],
             end_date_time=data["body"]["timestamp"],
             cdr_token=CdrToken(
-                uid=data["id_tag"]["id_token"],
+                uid=data["body"]["id_tag"],
                 type=TokenType.rfid,
                 contract_id=str(uuid.uuid4())  # TODO: Pull from backoffice data
             ),
@@ -137,7 +138,7 @@ class Wrangler:
             ],
             charging_periods=charging_periods
         )
-
+        print(f"CDR: {cdr}")
         self.data_writer.write(cdr_object=cdr)
 
         return cdr

@@ -1,5 +1,5 @@
 import uuid
-from typing import Callable, Dict
+from typing import Dict
 
 
 class DataWriter:
@@ -21,8 +21,8 @@ class DataWriter:
             "message_id": {
                 "S": str(priority_fields["message_id"]),
             },
-            "body": {
-                "S": str(data),
+            "payload": {
+                "B": data,
             },
         }
         self.client.put_item(TableName="StartTransactionRequest", Item=item)
@@ -35,8 +35,8 @@ class DataWriter:
             "transaction_id": {
                 "N": str(priority_fields["transaction_id"]),
             },
-            "body": {
-                "S": str(data),
+            "payload": {
+                "B": data,
             },
         }
         self.client.put_item(TableName="StartTransactionResponse", Item=item)
@@ -49,8 +49,8 @@ class DataWriter:
             "transaction_id": {
                 "N": str(priority_fields["transaction_id"]),
             },
-            "body": {
-                "S": str(data),
+            "payload": {
+                "B": data,
             },
         }
         self.client.put_item(TableName="MeterValuesRequest", Item=item)

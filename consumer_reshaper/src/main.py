@@ -8,9 +8,6 @@ import logging
 from data_writer import DataWriter
 from transformer import Transformer
 
-import psycopg2
-
-
 delay = os.environ.get("DELAY_START_SECONDS", 240)
 sleep(int(delay))
 

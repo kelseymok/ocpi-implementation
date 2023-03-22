@@ -25,8 +25,8 @@ class TestDataWriter:
                 "message_id": {
                     "S": str(priority_fields["message_id"]),
                 },
-                "body": {
-                    "S": str(data),
+                "payload": {
+                    "B": data,
                 },
             }
 
@@ -62,8 +62,8 @@ class TestDataWriter:
                 "transaction_id": {
                     "N": str(priority_fields["transaction_id"])
                 },
-                "body": {
-                    "S": str(data),
+                "payload": {
+                    "B": data,
                 },
             }
 
@@ -100,8 +100,8 @@ class TestDataWriter:
                     "transaction_id": {
                         "N": str(priority_fields["transaction_id"])
                     },
-                    "body": {
-                        "S": str(data),
+                    "payload": {
+                        "B": data,
                     },
                 }
 
