@@ -4,11 +4,10 @@ This is a quick and dirty (emphasis) POC to explore some of the components of an
 ## Components
 * **OCPP Event Producer** of generated data for ChargePoints over 6 months
 * **Kafka Stack** to receive OCPP Events
-* **Consumer Flattener** - flattens OCPP Events
-* **Storage Flattened (PSQL)** - stores a subset of the flatten data (including Schema creation)
-* **Consumer Stop Transaction** - triggers the creation of a CDR based on a StopTransaction Request 
+* **Consumer Reshaper** - pulls out fields important to downstream queries and stores the payload and priority fields to DynamoDB
+* **Consumer Stop Transaction Dynamo** - triggers the creation of a CDR based on a StopTransaction Request 
 * **OCPP Storage (DynamoDB)** - stores OCPI objects
-* **OCPP Storage Seeder** - seeds some basic objects like Tariffs/Locations
+* **OCPP Storage Seeder** - seeds some basic objects like Tariffs/Locations and tables
 * **API** - gateway to OCPI objects
 
 **Note:** these are not at all in production state and is just for demonstrative purposes.
