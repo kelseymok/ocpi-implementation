@@ -22,9 +22,8 @@ from meter_values_handler import MeterValuesHandler
 
 
 class Wrangler:
-    def __init__(self, data_reader: DataReader, data_writer: DataWriter, meter_values_handler: MeterValuesHandler):
+    def __init__(self, data_reader: DataReader, meter_values_handler: MeterValuesHandler):
         self.data_reader = data_reader
-        self.data_writer = data_writer
         self.meter_values_handler = meter_values_handler
 
     def _convert_body_to_dict(self, x: Dict):
@@ -121,8 +120,8 @@ class Wrangler:
             start_date_time=start_transaction_request_record["body"]["timestamp"],
             end_date_time=data["body"]["timestamp"],
             cdr_token=CdrToken(
-                uid=data["body"]["id_tag"],
-                type=TokenType.rfid,
+                uid=data["body"]["id_tag"], # TODO: Pull from backoffice data
+                type=TokenType.rfid, # TODO: Pull from backoffice data
                 contract_id=str(uuid.uuid4())  # TODO: Pull from backoffice data
             ),
             auth_method=AuthMethod.auth_request,
@@ -139,6 +138,5 @@ class Wrangler:
             charging_periods=charging_periods
         )
         print(f"CDR: {cdr}")
-        self.data_writer.write(cdr_object=cdr)
 
         return cdr

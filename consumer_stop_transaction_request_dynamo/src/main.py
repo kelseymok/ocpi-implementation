@@ -42,7 +42,7 @@ writer_client = boto3.client('dynamodb', region_name='local', endpoint_url=f"htt
 data_writer = DataWriter(client=writer_client)
 
 meter_values_handler = MeterValuesHandler()
-wrangler = Wrangler(data_reader=data_reader, data_writer=data_writer, meter_values_handler=meter_values_handler)
+wrangler = Wrangler(data_reader=data_reader, meter_values_handler=meter_values_handler)
 
 def basic_consume_loop(consumer, topics):
     try:
@@ -62,7 +62,8 @@ def basic_consume_loop(consumer, topics):
             else:
                 decoded_message = msg.value().decode("utf-8")
                 message = json.loads(decoded_message)
-                wrangler.process(message)
+                cdr = wrangler.process(message)
+                data_writer.write(cdr)
     finally:
         # Close down consumer to commit final offsets.
         consumer.close()

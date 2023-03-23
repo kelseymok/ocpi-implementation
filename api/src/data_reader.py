@@ -16,5 +16,6 @@ class DataReader:
         response = self.storage_client.scan(
             TableName=table_name,
         )
-        items = [self._decode(x["body"]["B"]) for x in response["Items"]]
+        print(response)
+        items = [self._decode(x["payload"]["B"]) for x in response["Items"]]
         return items

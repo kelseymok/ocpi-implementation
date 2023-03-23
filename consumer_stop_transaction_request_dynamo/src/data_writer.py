@@ -21,7 +21,7 @@ class DataWriter:
             "lastUpdatedEpoch": {
                 "N": str(round(parser.parse(cdr_object.last_updated).timestamp())),
             },
-            "body": {
+            "payload": {
                 "B": encoded_body
             }
         }

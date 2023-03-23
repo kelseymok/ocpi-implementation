@@ -1,5 +1,5 @@
 import json
-from typing import Union
+import os
 
 import boto3
 import uvicorn
@@ -10,11 +10,13 @@ from data_reader import DataReader
 
 app = FastAPI()
 
+reader_host = os.environ.get("READER_HOST", "localhost")
+reader_port = os.environ.get("READER_PORT", "8000")
 
 dynamodb = boto3.client(
     'dynamodb',
     region_name='local',
-    endpoint_url="http://localhost:8000",
+    endpoint_url=f"http://{reader_host}:{reader_port}",
     aws_access_key_id="X",
     aws_secret_access_key="X"
 )
@@ -76,7 +78,7 @@ def get_locations_connector_id(location_id: str, evse_uid: str, connector_id: in
 
 @app.get("/cdrs")
 def get_cdrs():
-    data = data_reader.get_all("Locations")
+    data = data_reader.get_all("CDRs")
     response = ResponseBuilder(data=data, status_code=ResponseStatusCode.generic_success).format()  # success
     return Response(content=json.dumps(response), media_type="application/json")
 

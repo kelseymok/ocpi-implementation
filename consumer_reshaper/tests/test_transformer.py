@@ -2,6 +2,7 @@ from transformer import Transformer
 
 
 class TestTransformer:
+
     def test__start_transaction_request_reshaper(self):
         data = {
             "message_id": "df984612-05af-4278-9e8a-155d10a91fbd",

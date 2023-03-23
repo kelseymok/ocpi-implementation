@@ -284,6 +284,14 @@ services:
     container_name: ocpi-storage-seeder
     environment:
       DELAY_START_SECONDS: "20"
+  ocpi-api:
+    build: api/.
+    container_name: ocpi-api
+    environment:
+      READER_HOST: "ocpi-storage"
+      READER_PORT: "8000"
+    ports:
+      - "8080:8080"
 
 
 

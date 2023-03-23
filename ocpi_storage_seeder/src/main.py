@@ -76,7 +76,7 @@ def create_tariff():
         "lastUpdatedEpoch": {
             "N": str(round(parser.parse(tariff["last_updated"]).timestamp())),
         },
-        "body": {
+        "payload": {
             "B": encoded_body
         }
     }
@@ -172,7 +172,7 @@ def create_location():
         "lastUpdatedEpoch": {
             "N": str(round(parser.parse(location["last_updated"]).timestamp())),
         },
-        "body": {
+        "payload": {
             "B": encoded_body
         }
     }

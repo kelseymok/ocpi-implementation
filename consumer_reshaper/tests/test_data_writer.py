@@ -3,6 +3,7 @@ from unittest.mock import patch
 
 import boto3
 from botocore.stub import Stubber
+from freezegun import freeze_time
 
 from data_writer import DataWriter
 
@@ -11,6 +12,8 @@ def mock_uuid():
 
 
 class TestDataWriter:
+
+    @freeze_time("2023-01-01T09:00:00+00:00")
     def test__start_transaction_request(self):
         client = boto3.client("dynamodb", region_name="eu-central-1")
 
@@ -28,6 +31,9 @@ class TestDataWriter:
                 "payload": {
                     "B": data,
                 },
+                'ttl_expiration': {
+                    'N': '1677747600'
+                }
             }
 
         }
@@ -44,6 +50,7 @@ class TestDataWriter:
             result = data_writer._start_transaction_request(priority_fields, data)
             assert result == None
 
+    @freeze_time("2023-01-01T09:00:00+00:00")
     def test__start_transaction_response(self):
         client = boto3.client("dynamodb", region_name="eu-central-1")
 
@@ -65,6 +72,9 @@ class TestDataWriter:
                 "payload": {
                     "B": data,
                 },
+                'ttl_expiration': {
+                    'N': '1677747600'
+                }
             }
 
         }
@@ -81,6 +91,7 @@ class TestDataWriter:
             result = data_writer._start_transaction_response(priority_fields, data)
             assert result == None
 
+    @freeze_time("2023-01-01T09:00:00+00:00")
     @patch("uuid.uuid4", mock_uuid)
     def test__meter_values_request(self):
         client = boto3.client("dynamodb", region_name="eu-central-1")
@@ -103,6 +114,9 @@ class TestDataWriter:
                     "payload": {
                         "B": data,
                     },
+                    'ttl_expiration': {
+                        'N': '1677747600'
+                    }
                 }
 
             }

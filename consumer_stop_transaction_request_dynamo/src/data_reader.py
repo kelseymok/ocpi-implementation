@@ -1,6 +1,6 @@
 import base64
 import json
-from typing import Dict
+from typing import Dict, List
 
 from pandas import DataFrame
 import pandas as pd
@@ -53,7 +53,7 @@ class DataReader:
         return result
 
 
-    def get_charging_sessions(self, transaction_id: int) -> Dict:
+    def get_charging_sessions(self, transaction_id: int) -> List[Dict]:
         response = self.client.query(
             TableName="MeterValuesRequest",
             Select='ALL_ATTRIBUTES',
@@ -68,7 +68,7 @@ class DataReader:
         )
         print(f"meter values result: {response}")
 
-        result = [self._unpack_payload(x) for x in response["Items"]] if response["Count"] > 0 else None
+        result = [self._unpack_payload(x) for x in response["Items"]] if response["Count"] > 0 else []
         return result
 
 

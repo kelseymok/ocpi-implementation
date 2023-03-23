@@ -1,4 +1,5 @@
 import uuid
+from datetime import datetime, timezone, timedelta
 from typing import Dict
 
 
@@ -16,6 +17,11 @@ class DataWriter:
         writer = metadata_mapper.get(metadata["type"], lambda x: x)
         writer(priority_fields, data)
 
+    def _ttl(self) -> int:
+        seconds_in_one_day = 86400
+        seconds_in_60_days = seconds_in_one_day*60
+        return int((datetime.now(timezone.utc) + timedelta(seconds=seconds_in_60_days)).timestamp())
+
     def _start_transaction_request(self, priority_fields: Dict, data: bytes):
         item = {
             "message_id": {
@@ -24,6 +30,9 @@ class DataWriter:
             "payload": {
                 "B": data,
             },
+            "ttl_expiration": {
+                "N": str(self._ttl())
+            }
         }
         self.client.put_item(TableName="StartTransactionRequest", Item=item)
 
@@ -38,6 +47,9 @@ class DataWriter:
             "payload": {
                 "B": data,
             },
+            "ttl_expiration": {
+                "N": str(self._ttl())
+            }
         }
         self.client.put_item(TableName="StartTransactionResponse", Item=item)
 
@@ -52,6 +64,9 @@ class DataWriter:
             "payload": {
                 "B": data,
             },
+            "ttl_expiration": {
+                "N": str(self._ttl())
+            }
         }
         self.client.put_item(TableName="MeterValuesRequest", Item=item)
 
