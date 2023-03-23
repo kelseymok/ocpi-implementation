@@ -18,7 +18,7 @@ class MeterValuesHandler:
 
         return pd.DataFrame([ decorate(x) for x in data ])
 
-    def _identify_time_boundary(self, x, threshold: float = 60.0*3):
+    def _identify_time_boundary(self, x, threshold: float = 60.0*10):
         # The Threshold should in reality be smarter. We know our mock data for MeterValues comes at a freq of 60 seconds
         # Perhaps this can be the upper-mid quantile of the distribution to properly identify it.
         a = x.tolist()
