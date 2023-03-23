@@ -20,5 +20,9 @@ colima start --cpu 4 --memory 8
 
 docker-compose up
 ```
+It takes about 8 minutes for the simulated data to produce a Stop Transaction. After that, a CDR should be available via the OCPI API.
+* OCPI API: [http://localhost:8080/cdrs](http://localhost:8080/cdrs)
+
+## Hints
 * Kafka Control Center: [http://localhost:9021/](http://localhost:9021/)
 
